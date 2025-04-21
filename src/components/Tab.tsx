@@ -14,7 +14,6 @@ import {
 import { toast } from 'sonner';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useMediaQuery } from 'usehooks-ts';
 
 export default function Tab() {
   const weightArr = Array.from({ length: 111 }, (_, i) => 40 + i);
