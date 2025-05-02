@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -10,10 +10,11 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { toast } from 'sonner';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+} from "@/components/ui/select";
+import { toast } from "sonner";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { GrPowerReset } from "react-icons/gr";
 
 export default function Tab() {
   const weightArr = Array.from({ length: 111 }, (_, i) => 40 + i);
@@ -21,19 +22,20 @@ export default function Tab() {
   const waistArr = Array.from({ length: 101 }, (_, i) => 50 + i);
   const hipArr = Array.from({ length: 101 }, (_, i) => 50 + i);
 
-  const [weight, setWeight] = useState<number>();
-  const [height, setHeight] = useState<number>();
-  const [waist, setWaist] = useState<number>();
-  const [hip, setHip] = useState<number>();
-  const [gender, setGender] = useState<string>('');
-  const [bodyMassIndex, setBodyMassIndex] = useState<number>();
-  const [waistToHipRatio, setWaistToHipRatio] = useState<number>();
-  const [bodyFatPercentage, setBodyFatPercentage] = useState<number>();
-
+  const [weight, setWeight] = useState<number | null>(null);
+  const [height, setHeight] = useState<number | null>(null);
+  const [waist, setWaist] = useState<number | null>(null);
+  const [hip, setHip] = useState<number | null>(null);
+  const [gender, setGender] = useState<string>("");
+  const [bodyMassIndex, setBodyMassIndex] = useState<number | null>(null);
+  const [waistToHipRatio, setWaistToHipRatio] = useState<number | null>(null);
+  const [bodyFatPercentage, setBodyFatPercentage] = useState<number | null>(
+    null
+  );
 
   const calculateHealthMetrics = () => {
     if (!weight || !height || !waist || !hip || !gender) {
-      return toast.error('All fields are required!');
+      return toast.error("All fields are required!");
     }
 
     const heightInMeters = height / 100;
@@ -41,10 +43,10 @@ export default function Tab() {
     const whr = waist / hip;
     let bfp = 0;
 
-    if (gender === 'male') {
-      bfp = 1.20 * bmi + 0.23 * 21.66 - 16.2;
-    } else if (gender === 'female') {
-      bfp = 1.20 * bmi + 0.23 * 21.66 - 5.4;
+    if (gender === "male") {
+      bfp = 1.2 * bmi + 0.23 * 21.66 - 16.2;
+    } else if (gender === "female") {
+      bfp = 1.2 * bmi + 0.23 * 21.66 - 5.4;
     }
 
     const formattedBMI = parseFloat(bmi.toFixed(2));
@@ -60,128 +62,177 @@ export default function Tab() {
     );
   };
 
+  const resetValue = () => {
+    setWeight(null);
+    setHeight(null);
+    setWaist(null);
+    setHip(null);
+    setGender("");
+    setBodyMassIndex(null);
+    setWaistToHipRatio(null);
+    setBodyFatPercentage(null);
+  };
+
   return (
     <div className="min-h-screen  bg-black text-white py-6 px-4 flex items-center justify-center">
-    <Card className="w-full max-w-md md:max-w-lg bg-zinc-900 border border-zinc-700 shadow-xl rounded-2xl">
-      <CardHeader className="pb-2 text-center">
-        <CardTitle className="text-xl font-bold text-white">
-          Body Shape Calculator
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-5">
-  
-        <div className="grid gap-2">
-          <Label htmlFor="weight" className='text-white'>Weight (kg)</Label>
-          <Select onValueChange={(val) => setWeight(Number(val))}>
-            <SelectTrigger className="w-full bg-zinc-800 border-zinc-600 text-white">
-              <SelectValue placeholder="Select weight" />
-            </SelectTrigger>
-            <SelectContent className="bg-zinc-900 border-zinc-700 text-white">
-              <SelectGroup>
-                <SelectLabel>Select your weight</SelectLabel>
-                {weightArr.map((item) => (
-                  <SelectItem key={item} value={item.toString()}>
-                    {item} kg
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
-  
-        <div className="grid gap-2">
-          <Label htmlFor="height" className='text-white'>Height (cm)</Label>
-          <Select onValueChange={(val) => setHeight(Number(val))}>
-            <SelectTrigger className="w-full bg-zinc-800 border-zinc-600 text-white">
-              <SelectValue placeholder="Select height" />
-            </SelectTrigger>
-            <SelectContent className="bg-zinc-900 border-zinc-700 text-white">
-              <SelectGroup>
-                <SelectLabel>Select your height</SelectLabel>
-                {heightArr.map((item) => (
-                  <SelectItem key={item} value={item.toString()}>
-                    {item} cm
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
-  
-        <div className="grid gap-2">
-          <Label htmlFor="waist" className='text-white'>Waist (cm)</Label>
-          <Select onValueChange={(val) => setWaist(Number(val))}>
-            <SelectTrigger className="w-full bg-zinc-800 border-zinc-600 text-white">
-              <SelectValue placeholder="Select waist" />
-            </SelectTrigger>
-            <SelectContent className="bg-zinc-900 border-zinc-700 text-white">
-              <SelectGroup>
-                <SelectLabel>Select your waist</SelectLabel>
-                {waistArr.map((item) => (
-                  <SelectItem key={item} value={item.toString()}>
-                    {item} cm
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
-  
-        <div className="grid gap-2">
-          <Label htmlFor="hip" className='text-white'>Hip (cm)</Label>
-          <Select onValueChange={(val) => setHip(Number(val))}>
-            <SelectTrigger className="w-full bg-zinc-800 border-zinc-600 text-white">
-              <SelectValue placeholder="Select hip" />
-            </SelectTrigger>
-            <SelectContent className="bg-zinc-900 border-zinc-700 text-white">
-              <SelectGroup>
-                <SelectLabel>Select your hip</SelectLabel>
-                {hipArr.map((item) => (
-                  <SelectItem key={item} value={item.toString()}>
-                    {item} cm
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
-  
-        <div className="grid gap-2">
-          <Label htmlFor="gender" className='text-white'>Gender</Label>
-          <Select onValueChange={(val) => setGender(val)}>
-            <SelectTrigger className="w-full bg-zinc-800 border-zinc-600 text-white">
-              <SelectValue placeholder="Select gender" />
-            </SelectTrigger>
-            <SelectContent className="bg-zinc-900 border-zinc-700 text-white">
-              <SelectGroup>
-                <SelectLabel>Select your gender</SelectLabel>
-                <SelectItem value="male">Male</SelectItem>
-                <SelectItem value="female">Female</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
-  
-        <Button className="w-full bg-blue-600 hover:bg-blue-700" onClick={calculateHealthMetrics}>
-          Calculate
-        </Button>
-  
-  
-      </CardContent>
-    </Card>
-  
-    {
-      bodyFatPercentage && bodyMassIndex && waistToHipRatio && (
-        <div className="bg-zinc-900 text-white p-4 mt-6 md:ml-10 rounded-lg border border-zinc-700 w-full md:max-w-sm text-center space-y-2">
-          <p className="text-xl font-semibold text-blue-400">Your Health Metrics</p>
-          <p className="text-base">BMI (Body Mass Index): <span className="font-medium text-white">{bodyMassIndex}</span></p>
-          <p className="text-base">WHR (Waist-to-Hip Ratio): <span className="font-medium text-white">{waistToHipRatio}</span></p>
-          <p className="text-base">BFP (Body Fat Percentage): <span className="font-medium text-white">{bodyFatPercentage}%</span></p>
-        </div>
-      )
-    }
-  
-  </div>
+      <Card className="w-full max-w-md md:max-w-lg bg-zinc-900 border border-zinc-700 shadow-xl rounded-2xl">
+        <CardHeader className="pb-2 text-center">
+          <CardTitle className="text-xl font-bold text-white">
+            Body Shape Calculator
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-5">
+          <div className="grid gap-2">
+            <Label htmlFor="weight" className="text-white">
+              Weight (kg)
+            </Label>
+            <Select
+              value={weight === null ? "" : weight.toString()}
+              onValueChange={(val) => setWeight(Number(val))}
+            >
+              <SelectTrigger className="w-full bg-zinc-800 border-zinc-600 text-white">
+                <SelectValue placeholder="Select weight" />
+              </SelectTrigger>
+              <SelectContent className="bg-zinc-900 border-zinc-700 text-white">
+                <SelectGroup>
+                  <SelectLabel>Select your weight</SelectLabel>
+                  {weightArr.map((item) => (
+                    <SelectItem key={item} value={item.toString()}>
+                      {item} kg
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
 
+          <div className="grid gap-2">
+            <Label htmlFor="height" className="text-white">
+              Height (cm)
+            </Label>
+            <Select
+              value={height === null ? "" : height.toString()}
+              onValueChange={(val) => setHeight(Number(val))}
+            >
+              <SelectTrigger className="w-full bg-zinc-800 border-zinc-600 text-white">
+                <SelectValue placeholder="Select height" />
+              </SelectTrigger>
+              <SelectContent className="bg-zinc-900 border-zinc-700 text-white">
+                <SelectGroup>
+                  <SelectLabel>Select your height</SelectLabel>
+                  {heightArr.map((item) => (
+                    <SelectItem key={item} value={item.toString()}>
+                      {item} cm
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="waist" className="text-white">
+              Waist (cm)
+            </Label>
+            <Select
+              value={waist === null ? "" : waist.toString()}
+              onValueChange={(val) => setWaist(Number(val))}
+            >
+              <SelectTrigger className="w-full bg-zinc-800 border-zinc-600 text-white">
+                <SelectValue placeholder="Select waist" />
+              </SelectTrigger>
+              <SelectContent className="bg-zinc-900 border-zinc-700 text-white">
+                <SelectGroup>
+                  <SelectLabel>Select your waist</SelectLabel>
+                  {waistArr.map((item) => (
+                    <SelectItem key={item} value={item.toString()}>
+                      {item} cm
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="hip" className="text-white">
+              Hip (cm)
+            </Label>
+            <Select
+              value={hip === null ? "" : hip.toString()}
+              onValueChange={(val) => setHip(Number(val))}
+            >
+              <SelectTrigger className="w-full bg-zinc-800 border-zinc-600 text-white">
+                <SelectValue placeholder="Select hip" />
+              </SelectTrigger>
+              <SelectContent className="bg-zinc-900 border-zinc-700 text-white">
+                <SelectGroup>
+                  <SelectLabel>Select your hip</SelectLabel>
+                  {hipArr.map((item) => (
+                    <SelectItem key={item} value={item.toString()}>
+                      {item} cm
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="gender" className="text-white">
+              Gender
+            </Label>
+            <Select
+              value={gender === null ? "" : gender.toString()}
+              onValueChange={(val) => setGender(val)}
+            >
+              <SelectTrigger className="w-full bg-zinc-800 border-zinc-600 text-white">
+                <SelectValue placeholder="Select gender" />
+              </SelectTrigger>
+              <SelectContent className="bg-zinc-900 border-zinc-700 text-white">
+                <SelectGroup>
+                  <SelectLabel>Select your gender</SelectLabel>
+                  <SelectItem value="male">Male</SelectItem>
+                  <SelectItem value="female">Female</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="flex justify-center items-center gap-3">
+            <Button
+              className="w-[90%] bg-blue-600 hover:bg-blue-700 cursor-pointer"
+              onClick={calculateHealthMetrics}
+            >
+              Calculate
+            </Button>
+            <GrPowerReset
+              onClick={resetValue}
+              className="w-fit text-white font-bold text-2xl cursor-pointer"
+            />
+          </div>
+        </CardContent>
+      </Card>
+
+      {bodyFatPercentage && bodyMassIndex && waistToHipRatio && (
+        <div className="bg-zinc-900 text-white p-4 mt-6 md:ml-10 rounded-lg border border-zinc-700 w-full md:max-w-sm text-center space-y-2">
+          <p className="text-xl font-semibold text-blue-400">
+            Your Health Metrics
+          </p>
+          <p className="text-base">
+            BMI (Body Mass Index):{" "}
+            <span className="font-medium text-white">{bodyMassIndex}</span>
+          </p>
+          <p className="text-base">
+            WHR (Waist-to-Hip Ratio):{" "}
+            <span className="font-medium text-white">{waistToHipRatio}</span>
+          </p>
+          <p className="text-base">
+            BFP (Body Fat Percentage):{" "}
+            <span className="font-medium text-white">{bodyFatPercentage}%</span>
+          </p>
+        </div>
+      )}
+    </div>
   );
 }
